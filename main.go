@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"artcoding-go/utils"
+	"fmt"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	configUtils := utils.SysConfig{}
+	configUtils.Load("conf/config.ini")
+	mysqlConfig := configUtils.GetSectionConfig("prod")
+	fmt.Println(mysqlConfig)
 }
