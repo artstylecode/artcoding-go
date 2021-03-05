@@ -1,13 +1,9 @@
 package main
 
-import (
-	"artcoding-go/utils"
-	"fmt"
-)
+import "github.com/artstylecode/artcoding-go/file"
 
 func main() {
-	configUtils := utils.SysConfig{}
-	configUtils.Load("conf/config.ini")
-	mysqlConfig := configUtils.GetSectionConfig("prod")
-	fmt.Println(mysqlConfig)
+
+	textFileUtils := file.TextFile{}
+	textFileUtils.SaveFile("test.txt", "123\r123")
 }
