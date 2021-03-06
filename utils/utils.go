@@ -4,57 +4,91 @@ import (
 	"fmt"
 	"gopkg.in/ini.v1"
 	"log"
+	"os"
 	"strconv"
+	"strings"
 )
+
 // FailOnError 错误时记录日志
 func FailOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
 	}
 }
+
+func GetArgsMapped(defaultName string, abMapped map[string]string) map[string]string {
+	args := os.Args
+	var argsMapped = make(map[string]string)
+	isTarget := false
+	targetName := ""
+	for _, arg := range args {
+		if strings.HasPrefix(arg, "-") {
+			isTarget = true
+			targetName = strings.TrimPrefix(arg, "-")
+			if _, ok := abMapped[targetName]; ok {
+				targetName = abMapped[targetName]
+			}
+		} else {
+			if isTarget {
+				argsMapped[targetName] = arg
+			} else {
+				argsMapped[defaultName] = arg
+			}
+			isTarget = false
+		}
+	}
+	return argsMapped
+}
+
 // SysConfig ini配置文件类
 type SysConfig struct {
 	allConfig map[string]map[string]string
 }
+
 //Load 加载配置文件
-func (s *SysConfig) Load(path string)  {
-	config,err := ini.Load(path)
+func (s *SysConfig) Load(path string) {
+	config, err := ini.Load(path)
 	if err != nil {
 		panic("加载配置文件失败!")
 	}
 	configSections := config.Sections()
 	fmt.Println(configSections)
 	var res = make(map[string]map[string]string)
-	for _,configSection := range configSections{
+	for _, configSection := range configSections {
 		sectionName := configSection.Name()
 		res[sectionName] = make(map[string]string)
-		for key,value := range configSection.KeysHash(){
+		for key, value := range configSection.KeysHash() {
 			res[sectionName][key] = value
 		}
 	}
 	s.allConfig = res
 }
+
 // checkIsInit 验证是否初始化
-func (s *SysConfig) checkIsInit()  {
-	if s.allConfig == nil{
+func (s *SysConfig) checkIsInit() {
+	if s.allConfig == nil {
 		panic("文件未加载或文件加载失败！")
 	}
 }
+
 // GetSectionConfig 获取指定段落配置
-func (s SysConfig) GetSectionConfig(sectionName string)map[string]string  {
+func (s SysConfig) GetSectionConfig(sectionName string) map[string]string {
 	s.checkIsInit()
 	return s.allConfig[sectionName]
 }
+
 // GetAllConfig 获取所有段落配置
-func (s SysConfig) GetAllConfig()map[string]map[string]string  {
+func (s SysConfig) GetAllConfig() map[string]map[string]string {
 	s.checkIsInit()
 	return s.allConfig
 }
+
 //GetStringValue 获取string配置值
-func (s SysConfig) GetStringValue(sectionName string, key string)string  {
+func (s SysConfig) GetStringValue(sectionName string, key string) string {
 	s.checkIsInit()
 	return s.allConfig[sectionName][key]
 }
+
 // GetIntValue 获取int配置值
 func (s SysConfig) GetIntValue(sectionName string, key string) int {
 	s.checkIsInit()
@@ -65,6 +99,7 @@ func (s SysConfig) GetIntValue(sectionName string, key string) int {
 	}
 	return val
 }
+
 // GetBooleanValue 获取boolean配置值
 func (s SysConfig) GetBooleanValue(sectionName string, key string) bool {
 	s.checkIsInit()
@@ -75,11 +110,12 @@ func (s SysConfig) GetBooleanValue(sectionName string, key string) bool {
 	}
 	return val
 }
+
 // GetFloatValue 获取float配置值
 func (s SysConfig) GetFloatValue(sectionName string, key string, bitSize int) float64 {
 	s.checkIsInit()
 	strval := s.allConfig[sectionName][key]
-	val, err := strconv.ParseFloat(strval,bitSize)
+	val, err := strconv.ParseFloat(strval, bitSize)
 	if err != nil {
 		panic(fmt.Sprintf("模块：%s键：%s数据转换float失败", sectionName, key))
 	}
