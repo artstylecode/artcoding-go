@@ -1,9 +1,9 @@
 package main
 
-import "github.com/artstylecode/artcoding-go/file"
+import "github.com/artstylecode/artcoding-go/strings"
 
 func main() {
 
-	textFileUtils := file.TextFile{}
-	textFileUtils.SaveFile("test.txt", "123\r123")
+	str := "123abc"
+	print(strings.IsEmptyString(str))
 }
