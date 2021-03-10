@@ -1,19 +1,32 @@
 package redis
 
 import (
+	"context"
 	"fmt"
 	goredislib "github.com/go-redis/redis/v8"
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v8"
 )
 
+type RedisLockOption struct {
+}
+
+func (t RedisLockOption) Apply(mutex *redsync.Mutex) {
+
+}
+
+var ctx = context.Background()
+
 //AddOrGetRedisLock 新增/获取redis锁
-func AddOrGetRedisLock(lockName string, config map[string]string) *redsync.Mutex {
+func AddOrGetRedisLock(lockName string, config map[string]string, options ...RedisLockOption) *redsync.Mutex {
 
 	connectUrl := fmt.Sprintf("%s:%s", config["host"], config["port"])
 	client := goredislib.NewClient(&goredislib.Options{
-		Addr: connectUrl,
+		Addr:     connectUrl,
+		Password: "", // no password set
+		DB:       0,
 	})
+
 	pool := goredis.NewPool(client) // or, pool := redigo.NewPool(...)
 
 	// Create an instance of redisync to be used to obtain a mutual exclusion
