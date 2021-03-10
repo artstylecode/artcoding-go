@@ -1,19 +1,11 @@
 package main
 
-import (
-	"fmt"
-	"github.com/artstylecode/artcoding-go/utils"
-)
-
 func main() {
 
-	args := utils.GetArgsMapped("tableName", map[string]string{
-		"o": "outfile",
-		"p": "package",
-		"t": "tableName",
-	})
+}
 
-	for key, arg := range args {
-		fmt.Printf("key:%svalue:%s \n", key, arg)
-	}
+type Student struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
