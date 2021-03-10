@@ -111,6 +111,7 @@ func (r *RabbitMQ) RegisterCustomer(customer Customer) {
 
 //消费消息
 func (r *RabbitMQ) listenCustomer(customer Customer) {
+	fmt.Println("消费中....")
 	customerObject := customer
 	channel := r.Channel
 	q, err := channel.QueueDeclare(
@@ -134,6 +135,7 @@ func (r *RabbitMQ) listenCustomer(customer Customer) {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			fmt.Println("子携程消费中....")
 			res := customerObject.ReceiverMsg(string(d.Body))
 			if res {
 				d.Ack(false)
