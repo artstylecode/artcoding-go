@@ -66,7 +66,7 @@ func (r *RabbitMQ) getQueueMsgCount() int {
 	channel := r.Channel
 	q, err := channel.QueueDeclare(
 		r.queueName, // name
-		true,        // durable
+		false,       // durable
 		false,       // delete when unused
 		false,       // exclusive
 		false,       // no-wait
@@ -115,7 +115,7 @@ func (r *RabbitMQ) listenCustomer(customer Customer) {
 	channel := r.Channel
 	q, err := channel.QueueDeclare(
 		r.queueName, // name
-		true,        // durable
+		false,       // durable
 		false,       // delete when unused
 		false,       // exclusive
 		false,       // no-wait
