@@ -16,6 +16,7 @@ func FailOnError(err error, msg string) {
 	}
 }
 
+// GetArgsMapped
 func GetArgsMapped(defaultName string, abMapped map[string]string) map[string]string {
 	args := os.Args
 	var argsMapped = make(map[string]string)
