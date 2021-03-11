@@ -109,6 +109,29 @@ func (r *RabbitMQ) RegisterCustomer(customer Customer) {
 	r.customerList = append(r.customerList, customer)
 }
 
+func (r *RabbitMQ) SendMessage(msg string) {
+	q, err := r.Channel.QueueDeclare(
+		r.queueName, // name
+		false,       // durable
+		false,       // delete when unused
+		false,       // exclusive
+		false,       // no-wait
+		nil,         // arguments
+	)
+	utils.FailOnError(err, "定义队列失败！")
+	err = r.Channel.Publish(
+		"",     // exchange
+		q.Name, // routing key
+		false,  // mandatory
+		false,  // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte(msg),
+		})
+	utils.FailOnError(err, "Failed to publish a message")
+	log.Printf(" [x] Sent %s", msg)
+}
+
 //消费消息
 func (r *RabbitMQ) listenCustomer(customer Customer) {
 	fmt.Println("消费中....")

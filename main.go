@@ -1,17 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"github.com/artstylecode/artcoding-go/redis"
+	"github.com/artstylecode/artcoding-go/mq"
 )
 
 func main() {
-	mutex := redis.AddOrGetRedisLock("test_1", map[string]string{
-		"host": "127.0.0.1",
-		"port": "16379",
-	})
-	res := mutex.Lock()
-	fmt.Println(res)
+	//TODO 加入拼团队列
+	mqConfig := mq.MqConfig{
+		Host: "fish",
+		Port: 5672,
+		User: "guest",
+		Pass: "5Zgeu7ByiMw3s3rL",
+	}
+	rabbitMq := mq.New(mqConfig, "group_beta")
+	rabbitMq.SendMessage("{\"name\":\"123\", \"age\":123}")
 }
 
 type Student struct {
