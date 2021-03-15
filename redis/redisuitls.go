@@ -9,16 +9,16 @@ import (
 )
 
 type RedisLockOption struct {
+	redsync.Option
 }
 
-func (t RedisLockOption) Apply(mutex *redsync.Mutex) {
-
+func (t RedisLockOption) Apply(Mutex *redsync.Mutex) {
 }
 
 var ctx = context.Background()
 
 //AddOrGetRedisLock 新增/获取redis锁
-func AddOrGetRedisLock(lockName string, config map[string]string, options ...RedisLockOption) *redsync.Mutex {
+func AddOrGetRedisLock(lockName string, config map[string]string) *redsync.Mutex {
 
 	connectUrl := fmt.Sprintf("%s:%s", config["host"], config["port"])
 	client := goredislib.NewClient(&goredislib.Options{
@@ -35,6 +35,6 @@ func AddOrGetRedisLock(lockName string, config map[string]string, options ...Red
 
 	// Obtain a new mutex by using the same name for all instances wanting the
 	// same lock.
-	mutex := rs.NewMutex(lockName)
+	mutex := rs.NewMutex(lockName, redsync.WithExpiry(3))
 	return mutex
 }
