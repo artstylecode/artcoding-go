@@ -6,6 +6,7 @@ import (
 	goredislib "github.com/go-redis/redis/v8"
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v8"
+	"time"
 )
 
 type RedisLockOption struct {
@@ -35,6 +36,6 @@ func AddOrGetRedisLock(lockName string, config map[string]string) *redsync.Mutex
 
 	// Obtain a new mutex by using the same name for all instances wanting the
 	// same lock.
-	mutex := rs.NewMutex(lockName, redsync.WithExpiry(3))
+	mutex := rs.NewMutex(lockName, redsync.WithExpiry(3*time.Second))
 	return mutex
 }
