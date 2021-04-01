@@ -1,19 +1,18 @@
 package main
 
 import (
-	"github.com/artstylecode/artcoding-go/mq"
+	"fmt"
+	"github.com/artstylecode/artcoding-go/utils"
 )
 
 func main() {
-	//TODO 加入拼团队列
-	mqConfig := mq.MqConfig{
-		Host: "fish",
-		Port: 5672,
-		User: "guest",
-		Pass: "5Zgeu7ByiMw3s3rL",
-	}
-	rabbitMq := mq.New(mqConfig, "group_beta")
-	rabbitMq.SendMessage("{\"name\":\"123\", \"age\":123}")
+	testExcel()
+}
+func testExcel() {
+	excelUtils := utils.ExcelUtils{}
+	dateItem := excelUtils.Read("sourcesfile/test.xlsx")
+
+	fmt.Println(dateItem)
 }
 
 type Student struct {
