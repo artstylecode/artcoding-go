@@ -11,7 +11,14 @@ func main() {
 func testExcel() {
 	excelUtils := utils.ExcelUtils{}
 	dateItem := excelUtils.Read("sourcesfile/test.xlsx")
-
+	data := map[string][][]string{
+		"test": [][]string{
+			[]string{
+				"姓名", "测试",
+			},
+		},
+	}
+	excelUtils.Write("test2.xlsx", data)
 	fmt.Println(dateItem)
 }
 

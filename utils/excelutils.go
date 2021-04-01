@@ -7,6 +7,7 @@ import (
 type ExcelUtils struct {
 }
 
+//Read 读取excel各个sheet的数据内容
 func (t *ExcelUtils) Read(name string) map[string][][]string {
 	xlsxFile, err := xlsx.OpenFile(name)
 	if err != nil {
@@ -28,7 +29,7 @@ func (t *ExcelUtils) Read(name string) map[string][][]string {
 }
 
 // Write 写入excel数据
-func (t *ExcelUtils) Write(name string, list map[string][][]string) bool {
+func (t *ExcelUtils) Write(path string, list map[string][][]string) bool {
 	xlsxFile := xlsx.NewFile()
 	for sheetName, items := range list {
 		sheet, _ := xlsxFile.AddSheet(sheetName)
@@ -39,6 +40,7 @@ func (t *ExcelUtils) Write(name string, list map[string][][]string) bool {
 			}
 		}
 	}
+	err := xlsxFile.Save(path)
 
-	return true
+	return err == nil
 }
